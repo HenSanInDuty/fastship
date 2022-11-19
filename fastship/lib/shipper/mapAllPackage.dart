@@ -15,6 +15,12 @@ class MapAllPackage extends StatefulWidget {
   State<MapAllPackage> createState() => _MapAllPackageState();
 }
 
+final statusFontColor = {
+  "Delivering": Colors.blue,
+  "Cancel": Colors.redAccent,
+  "Received": Colors.greenAccent
+};
+
 class _MapAllPackageState extends State<MapAllPackage> {
   final Future<dynamic> all_shipping = listShipping();
   final Future<Position> currentLocation = getCurrentLocation();
@@ -27,10 +33,11 @@ class _MapAllPackageState extends State<MapAllPackage> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               List<Map<String, dynamic>> address = [
-                for (var instance in snapshot.data![1]) instance['address']
+                for (var instance in snapshot.data![1])
+                  {'status': instance['status'], ...instance['address']}
               ];
               //If have many address
-              if (address.length > 0) {
+              if (address.isNotEmpty) {
                 Future<dynamic> pointAllAddress = getAllPlace(address);
                 return FutureBuilder(
                     future: pointAllAddress,
@@ -38,7 +45,7 @@ class _MapAllPackageState extends State<MapAllPackage> {
                       if (subSnapshot.hasError) {
                         return const Center(child: Text("Can't find data"));
                       } else if (subSnapshot.hasData) {
-                        print(subSnapshot.data![0][0]['lat']);
+                        var dataInMap = subSnapshot.data;
                         return FlutterMap(
                           options: MapOptions(
                             center: LatLng(snapshot.data?[0]!.latitude,
@@ -65,17 +72,19 @@ class _MapAllPackageState extends State<MapAllPackage> {
                                   ),
                                 ),
                                 ...[
-                                  for (var ad in subSnapshot.data)
+                                  for (int i = 0;
+                                      i < subSnapshot.data.length;
+                                      i++)
                                     Marker(
-                                      point: LatLng(double.parse(ad[0]['lat']),
-                                          double.parse(ad[0]['lon'])),
+                                      point: LatLng(
+                                          double.parse(dataInMap[i][0]['lat']),
+                                          double.parse(dataInMap[i][0]['lon'])),
                                       width: 30,
                                       height: 30,
-                                      builder: (context) => const Icon(
-                                        Icons.home,
-                                        size: 30,
-                                        color: Colors.red,
-                                      ),
+                                      builder: (context) => Icon(Icons.home,
+                                          size: 30,
+                                          color: statusFontColor[address[i]
+                                              ['status']]),
                                     ),
                                 ]
                               ],

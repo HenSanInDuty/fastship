@@ -9,27 +9,6 @@ class ShipperHome extends StatefulWidget {
   State<ShipperHome> createState() => _ShipperHomeState();
 }
 
-final List<Map<String, Object>> dumpData = [
-  {
-    "id": "2",
-    "address": "So 2 Duong Nguyen Van Cu, NK, Can Tho",
-    "customer_name": "Nhan",
-    "status": "Delivery",
-  },
-  {
-    "id": "3",
-    "address": "So 2 Duong Nguyen Van Cu, NK, Can Tho",
-    "customer_name": "Nhan",
-    "status": "Delivery",
-  },
-  {
-    "id": "4",
-    "address": "So 2 Duong Nguyen Van Cu, NK, Can Tho",
-    "customer_name": "Nhan",
-    "status": "Delivery",
-  }
-];
-
 class _ShipperHomeState extends State<ShipperHome> {
   final Future<dynamic> _all_shipping = listShipping();
 
@@ -59,17 +38,28 @@ class _ShipperHomeState extends State<ShipperHome> {
     );
   }
 
+  final colorTheme = {
+    "Delivering": {"background": Colors.white, "font": Colors.black},
+    "Cancel": {"background": Colors.redAccent, "font": Colors.white},
+    "Received": {"background": Colors.greenAccent, "font": Colors.white}
+  };
+
   Widget ListViewAll(double width, List<dynamic> listShipping) {
     return ListView.builder(
         padding: const EdgeInsets.all(16),
         itemCount: listShipping.length,
         itemBuilder: (context, index) {
+          Color backgroundColor =
+              colorTheme[listShipping[index]['status']]!['background']!;
+          Color fontColor = colorTheme[listShipping[index]['status']]!['font']!;
+
           return GestureDetector(
             onTap: () {
               Navigator.pushNamed(context, "/detail-package",
                   arguments: listShipping[index]);
             },
             child: Card(
+              color: backgroundColor,
               child: Padding(
                 padding: const EdgeInsets.all(8),
                 child: Row(children: [
@@ -78,12 +68,14 @@ class _ShipperHomeState extends State<ShipperHome> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text("Product No."),
                         Text(
-                          listShipping[index]["id"].toString(),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        )
+                          "Product No.",
+                          style: TextStyle(color: fontColor),
+                        ),
+                        Text(listShipping[index]["id"].toString(),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(color: fontColor))
                       ],
                     ),
                   ),
@@ -91,38 +83,36 @@ class _ShipperHomeState extends State<ShipperHome> {
                       width: width / 12 * 3,
                       child: Column(
                         children: [
-                          const Text("Address"),
+                          Text("Address", style: TextStyle(color: fontColor)),
                           Text(
-                            listShipping[index]["address"]["province"] +
-                                " " +
-                                listShipping[index]["address"]["district"],
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                              listShipping[index]["address"]["province"] +
+                                  " " +
+                                  listShipping[index]["address"]["district"],
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: fontColor)),
                         ],
                       )),
                   SizedBox(
                       width: width / 12 * 3,
                       child: Column(
                         children: [
-                          const Text("Customer"),
-                          Text(
-                            listShipping[index]['customer']['name'],
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                          Text("Customer", style: TextStyle(color: fontColor)),
+                          Text(listShipping[index]['customer']['name'],
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: fontColor)),
                         ],
                       )),
                   SizedBox(
                       width: width / 12 * 3,
                       child: Column(
                         children: [
-                          const Text("Status"),
-                          Text(
-                            listShipping[index]["status"],
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                          Text("Status", style: TextStyle(color: fontColor)),
+                          Text(listShipping[index]["status"],
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: fontColor)),
                         ],
                       )),
                 ]),

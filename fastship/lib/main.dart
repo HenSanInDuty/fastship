@@ -1,4 +1,4 @@
-import 'package:fastship/api/api.dart';
+import 'api/api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'shipper/shipper.dart';
@@ -14,7 +14,8 @@ void main() {
         // When navigating to the "/" route, build the FirstScreen widget.
         '/': (context) => const Home(),
         '/all-shipping': (context) => const ShipperHome(),
-        '/detail-package': (context) => const DetailPackage()
+        '/detail-package': (context) => const DetailPackage(),
+        '/map-package': (context) => const DetailPackage()
       },
       debugShowCheckedModeBanner: false,
     ),

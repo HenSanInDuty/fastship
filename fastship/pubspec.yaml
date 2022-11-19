@@ -38,6 +38,12 @@ dependencies:
   cupertino_icons: ^1.0.2
   http: ^0.13.5
   flutter_bloc: ^8.1.1
+  latlong: ^0.6.1
+  flutter_map: ^3.0.0
+  flutter_map_marker_cluster: any
+  syncfusion_flutter_maps: ^20.3.57
+  flutter_osm_plugin: ^0.40.3
+  geolocator: ^9.0.2
 
 dev_dependencies:
   flutter_test:

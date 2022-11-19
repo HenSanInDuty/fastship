@@ -20,7 +20,12 @@ class _HomeState extends State<Home> {
                 onPressed: () {
                   Navigator.pushNamed(context, "/all-shipping");
                 },
-                child: Text("All shipping"))
+                child: const Text("All shipping")),
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, "/map-all-package");
+                },
+                child: const Text("Map tracking all shipping"))
           ],
         ));
   }

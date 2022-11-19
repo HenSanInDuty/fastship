@@ -66,9 +66,39 @@ class _DetailPackageState extends State<DetailPackage> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
                 SizedBox(
-                  height: width,
+                  height: height / 12 * 2,
                   width: width,
-                  child: const MapToPackage(),
+                  child: Center(
+                      child: ElevatedButton(
+                    child: const Text("Click to see detail map"),
+                    onPressed: () {
+                      Navigator.pushNamed(context, "/map-package",
+                          arguments: data['address']);
+                    },
+                  )),
+                ),
+                const Text(
+                  "ACTION",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                SizedBox(
+                  height: height / 12 * 2,
+                  width: width,
+                  child: Center(
+                      child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.orangeAccent),
+                        child: const Text("Change status shipping"),
+                        onPressed: () {
+                          Navigator.pushNamed(context, "/map-package",
+                              arguments: data['address']);
+                        },
+                      )
+                    ],
+                  )),
                 )
               ],
             ),

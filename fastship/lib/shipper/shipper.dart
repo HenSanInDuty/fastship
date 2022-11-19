@@ -31,7 +31,7 @@ final List<Map<String, Object>> dumpData = [
 ];
 
 class _ShipperHomeState extends State<ShipperHome> {
-  final Future<dynamic> _all_shipping = testApi();
+  final Future<dynamic> _all_shipping = listShipping();
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +94,7 @@ class _ShipperHomeState extends State<ShipperHome> {
                           const Text("Address"),
                           Text(
                             listShipping[index]["address"]["province"] +
+                                " " +
                                 listShipping[index]["address"]["district"],
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,

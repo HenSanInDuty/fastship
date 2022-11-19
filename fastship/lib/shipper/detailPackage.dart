@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:syncfusion_flutter_maps/maps.dart';
-import 'mapToPackage.dart';
-import '../api/api.dart';
 
 class DetailPackage extends StatefulWidget {
   const DetailPackage({super.key});
@@ -18,7 +14,14 @@ class _DetailPackageState extends State<DetailPackage> {
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    final isChangeStatusBtnDisable =
+        data['status'] == "Delivering" ? false : true;
 
+    final statusFontColor = {
+      "Delivering": Colors.black,
+      "Cancel": Colors.redAccent,
+      "Received": Colors.greenAccent
+    };
     return Scaffold(
         appBar: AppBar(
           title: const Text("Detail-Shipping-Package"),
@@ -44,6 +47,10 @@ class _DetailPackageState extends State<DetailPackage> {
                             children: [
                               textCell(width - 32, "Package No:",
                                   data['id'].toString()),
+                              textCell(width - 32, "Status",
+                                  data['status'].toString(),
+                                  color: statusFontColor[
+                                      data['status'].toString()]!),
                               textCell(width - 32, "Name:",
                                   data['customer']['name']),
                               textCell(width - 32, "Phone:",
@@ -90,12 +97,17 @@ class _DetailPackageState extends State<DetailPackage> {
                     children: [
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.orangeAccent),
+                            backgroundColor: !isChangeStatusBtnDisable
+                                ? Colors.orangeAccent
+                                : Colors.grey),
                         child: const Text("Change status shipping"),
-                        onPressed: () {
-                          Navigator.pushNamed(context, "/map-package",
-                              arguments: data['address']);
-                        },
+                        onPressed: !isChangeStatusBtnDisable
+                            ? () {
+                                Navigator.pushNamed(
+                                    context, "/change-status-package",
+                                    arguments: data['id']);
+                              }
+                            : () {},
                       )
                     ],
                   )),
@@ -107,7 +119,8 @@ class _DetailPackageState extends State<DetailPackage> {
   }
 }
 
-Row textCell(double width, String title, String data) {
+Row textCell(double width, String title, String data,
+    {Color color = Colors.black}) {
   return Row(
     children: [
       Column(
@@ -127,6 +140,7 @@ Row textCell(double width, String title, String data) {
             child: Text(
               data,
               textAlign: TextAlign.justify,
+              style: TextStyle(color: color),
             ),
           )
         ],

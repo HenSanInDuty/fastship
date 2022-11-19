@@ -44,6 +44,7 @@ dependencies:
   syncfusion_flutter_maps: ^20.3.57
   flutter_osm_plugin: ^0.40.3
   geolocator: ^9.0.2
+  flutter_secure_storage: ^6.0.0
 
 dev_dependencies:
   flutter_test:

@@ -115,8 +115,9 @@ class _ChangeStatusPackageState extends State<ChangeStatusPackage> {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                         snackBar("Change status successful"));
                                     Future.delayed(Duration(seconds: 2));
-                                    setState(() {});
-                                    Navigator.pop(context);
+                                    setState(() {
+                                      Navigator.pop(context);
+                                    });
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                         snackBar("Change status unsuccessful"));

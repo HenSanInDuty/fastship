@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 
@@ -12,17 +13,16 @@ const url = "http://192.168.67.181:8000/api";
 
 const URL_API = {
   "get_all_shipping": "$url/shipping/order-detail/list-shipping/",
-  "change_status_shipping_package": "$url/shipping/order-detail/status/"
+  "change_status_shipping_package": "$url/shipping/order-detail/status/",
+  "login": "$url/account/sign-in/"
 };
 
 const mapUrl = "https://nominatim.openstreetmap.org/search.php?";
 const directionUrl = "http://router.project-osrm.org/route/v1/driving/";
 const paramDirection = "?overview=false&steps=true";
-const header = {
-  HttpHeaders.authorizationHeader:
-      'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjY5MzA2MTgwLCJpYXQiOjE2Njg4NzQxODAsImp0aSI6ImY0NDgzYzA1ZjU0NTQ1NTE5NzU1ZGVhYTQ0Y2RmNTEzIiwidXNlcl9pZCI6NSwicGhvbmUiOiIwNzcyMTMzNTU1In0.QgKCNIvd4iTJ2EZpKS2gCWp0rSe-UWlBbab6WVVNIRU',
-  "Content-Type": "application/json"
-};
+// Create storage
+const storage = FlutterSecureStorage();
+var header = {"Content-Type": "application/json"};
 
 class ApiBloc extends Bloc<ApiEvent, dynamic> {
   ApiBloc() : super(null);
@@ -37,7 +37,22 @@ class ApiBloc extends Bloc<ApiEvent, dynamic> {
   }
 }
 
+Future<bool> login(Map<String, String> payload) async {
+  final response = await http.post(Uri.parse(URL_API['login']!),
+      body: jsonEncode(payload), headers: header);
+  if (response.statusCode == 200) {
+    dynamic data = jsonDecode(utf8.decode(response.bodyBytes));
+    await storage.write(key: 'api_key', value: data['access']);
+    return true;
+  } else {
+    return false;
+  }
+}
+
 Future<List<dynamic>> listShipping() async {
+  String api_key = await storage.read(key: 'api_key') ?? "";
+  Map<String, String> authen = {"authorization": 'Bearer $api_key'};
+  header.addEntries(authen.entries);
   final response =
       await http.get(Uri.parse(URL_API['get_all_shipping']!), headers: header);
   if (response.statusCode == 200) {
@@ -56,7 +71,6 @@ Future<bool> changeStatusShippingPackage(Map<String, dynamic> payload) async {
   if (response.statusCode == 200) {
     return true;
   } else {
-    print(response.body);
     return false;
   }
 }
